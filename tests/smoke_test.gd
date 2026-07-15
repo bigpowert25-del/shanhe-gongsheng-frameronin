@@ -17,6 +17,15 @@ func _run() -> void:
 		assert(chapter.intro.size() >= 4, "每卷应有完整剧情对话")
 		assert(chapter.choices.size() == 3, "每卷应有三个关键抉择")
 		assert(chapter.lore.size() == 2, "每卷应有两条人文见闻")
+	var sheet_library_script = load("res://scripts/sprite_sheet_library.gd")
+	var sheets = sheet_library_script.new()
+	assert(sheets.catalog_valid, "动作素材目录应能加载")
+	assert(sheets.actor_count() == 11, "应包含主角、三名 NPC、裂墨与六名首领")
+	for actor_id in ["you", "ayan", "shenjin", "qiaosheng", "rift_walker", "boss_01", "boss_06"]:
+		assert(sheets.has_actor(actor_id), "动作素材缺少：%s" % actor_id)
+		var frame: Dictionary = sheets.frame_for(actor_id, "attack", 0.18)
+		assert(not frame.is_empty() and frame.texture != null, "动作帧应可加载：%s" % actor_id)
+		assert(frame.region.size == Vector2(192, 288), "动作帧尺寸应符合 FrameRonin 接口")
 
 	var exploration_script = load("res://scripts/exploration.gd")
 	var arena = exploration_script.new()
@@ -73,5 +82,5 @@ func _run() -> void:
 	assert(int(game.legacy_stats.hero) > 0, "高代价选择应积累英雄气")
 	assert(int(game.legacy_stats.people) == 24, "十二条见闻应累积民声")
 	assert(game._resolve_ending().has("title"), "应生成有效终章")
-	print("SMOKE_TEST_PASS chapters=6 combat=ok bosses=6 lore=12 choices=18 endings=3")
+	print("SMOKE_TEST_PASS chapters=6 combat=ok bosses=6 lore=12 choices=18 endings=3 actors=11")
 	quit(0)

@@ -1,5 +1,6 @@
 extends Control
 
+const SpriteSheetLibrary := preload("res://scripts/sprite_sheet_library.gd")
 const RIFT_WALKER_TEXTURE := preload("res://assets/enemies/rift_walker.png")
 const BOSS_01_TEXTURE := preload("res://assets/enemies/boss_01.png")
 const BOSS_02_TEXTURE := preload("res://assets/enemies/boss_02.png")
@@ -69,6 +70,7 @@ var hazards: Array[Dictionary] = []
 var particles: Array[Dictionary] = []
 var lore_points: Array[Dictionary] = []
 var rng := RandomNumberGenerator.new()
+var sprite_sheets = SpriteSheetLibrary.new()
 
 
 func _ready() -> void:
@@ -578,13 +580,20 @@ func _draw_world_npc(npc: Dictionary) -> void:
 	var p: Vector2 = npc.pos
 	var c: Color = npc.color
 	var sway := sin(elapsed * 1.35) * 1.8
-	var texture := _npc_texture(str(npc.id))
+	var actor_id := str(npc.id)
+	var sheet_id := "boss_06" if actor_id == "moyan" else actor_id
+	var texture := _npc_texture(actor_id)
 	var height := 112.0
-	var width := height * texture.get_width() / texture.get_height()
+	var width := height * float(sprite_sheets.frame_size.x) / float(sprite_sheets.frame_size.y)
 	var foot := p + Vector2(0, sway)
 	draw_ellipse_shadow(foot, width * 0.38, 6.0, Color(0.01, 0.02, 0.02, 0.42))
 	draw_circle(foot + Vector2(0, -48), 34.0 + sin(elapsed * 1.8) * 2.0, Color(c, 0.08))
-	draw_texture_rect(texture, Rect2(foot - Vector2(width * 0.5, height), Vector2(width, height)), false)
+	var frame := sprite_sheets.frame_for(sheet_id, "idle", elapsed)
+	if frame.is_empty():
+		width = height * texture.get_width() / texture.get_height()
+		draw_texture_rect(texture, Rect2(foot - Vector2(width * 0.5, height), Vector2(width, height)), false)
+	else:
+		draw_texture_rect_region(frame.texture, Rect2(foot - Vector2(width * 0.5, height), Vector2(width, height)), frame.region)
 	draw_circle(foot + Vector2(width * 0.38, -height + 12), 10.0, Color("a33931"))
 	draw_string(ThemeDB.fallback_font, foot + Vector2(width * 0.38 - 3, -height + 17), "!", HORIZONTAL_ALIGNMENT_CENTER, 8.0, 15, Color.WHITE)
 
@@ -601,7 +610,7 @@ func _draw_player_actor() -> void:
 	var facing := -1.0 if move_dir.x < -0.08 else 1.0
 	var bob: float = absf(sin(step_phase)) * 2.8 * movement_strength
 	var height := 98.0
-	var width := height * PLAYER_TEXTURE.get_width() / PLAYER_TEXTURE.get_height()
+	var width := height * float(sprite_sheets.frame_size.x) / float(sprite_sheets.frame_size.y)
 	if dash_time > 0.0:
 		for k in 3:
 			var ghost_pos := player_pos - move_dir * float(16 + k * 15)
@@ -623,7 +632,22 @@ func _draw_player_actor() -> void:
 	var actor_pos := player_pos + move_dir * lunge + Vector2(0, -bob)
 	draw_set_transform(actor_pos, lean * facing, Vector2(facing, 1.0))
 	var tint := Color(1.0, 0.60, 0.56, 1.0) if hurt_anim > 0.0 and int(hurt_anim * 40.0) % 2 == 0 else Color.WHITE
-	draw_texture_rect(PLAYER_TEXTURE, Rect2(Vector2(-width * 0.5, -height + 5.0), Vector2(width, height)), false, tint)
+	var state := "idle"
+	var state_time := elapsed
+	if hurt_anim > 0.0:
+		state = "hurt"
+		state_time = 0.28 - hurt_anim
+	elif attack_anim > 0.0:
+		state = "attack"
+		state_time = 0.36 - attack_anim
+	elif dash_time > 0.0 or movement_strength > 0.2:
+		state = "walk"
+	var frame := sprite_sheets.frame_for("you", state, state_time)
+	if frame.is_empty():
+		width = height * PLAYER_TEXTURE.get_width() / PLAYER_TEXTURE.get_height()
+		draw_texture_rect(PLAYER_TEXTURE, Rect2(Vector2(-width * 0.5, -height + 5.0), Vector2(width, height)), false, tint)
+	else:
+		draw_texture_rect_region(frame.texture, Rect2(Vector2(-width * 0.5, -height + 5.0), Vector2(width, height)), frame.region, tint)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if attack_anim > 0.0:
 		var base_angle := move_dir.angle()
@@ -636,15 +660,27 @@ func _draw_ink_enemy(enemy: Dictionary) -> void:
 	var pulse := sin(float(enemy.phase) * 3.0)
 	var flash := float(enemy.flash) > 0.0
 	var texture: Texture2D = _boss_texture() if boss else RIFT_WALKER_TEXTURE
+	var actor_id := "boss_%02d" % (chapter_index + 1) if boss else "rift_walker"
 	var height := 160.0 if boss else 108.0
-	var width := height * texture.get_width() / texture.get_height()
+	var width := height * float(sprite_sheets.frame_size.x) / float(sprite_sheets.frame_size.y)
 	var foot := p + Vector2(0, 13.0 if boss else 7.0)
 	var rect := Rect2(foot - Vector2(width * 0.5, height), Vector2(width, height))
 	draw_ellipse_shadow(foot, width * 0.42, 6.5 if boss else 4.5, Color(0.01, 0.01, 0.01, 0.52))
 	var aura := Color("7d2520") if boss else Color("1a201e")
 	draw_circle(p + Vector2(0, -22), (42.0 if boss else 25.0) + pulse * 2.0, Color(aura, 0.12))
 	var tint := Color(1.0, 0.64, 0.52, 1.0) if flash else Color.WHITE
-	draw_texture_rect(texture, rect, false, tint)
+	var state := "hurt" if flash else ("attack" if float(enemy.attack_cd) < 0.24 else "walk")
+	var state_time := (0.12 - float(enemy.flash)) if flash else ((0.24 - float(enemy.attack_cd)) if state == "attack" else float(enemy.phase))
+	var frame := sprite_sheets.frame_for(actor_id, state, state_time)
+	if frame.is_empty():
+		width = height * texture.get_width() / texture.get_height()
+		rect = Rect2(foot - Vector2(width * 0.5, height), Vector2(width, height))
+		draw_texture_rect(texture, rect, false, tint)
+	else:
+		var facing := -1.0 if player_pos.x < p.x else 1.0
+		draw_set_transform(foot, 0.0, Vector2(facing, 1.0))
+		draw_texture_rect_region(frame.texture, Rect2(Vector2(-width * 0.5, -height), Vector2(width, height)), frame.region, tint)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	# A short brush arc makes the photographic sprite participate in combat motion.
 	if float(enemy.attack_cd) < 0.24:
 		draw_arc(p + Vector2(0, -20), 42.0 if boss else 28.0, -0.9, 0.65, 20, Color(0.72, 0.22, 0.17, 0.58), 3.0)

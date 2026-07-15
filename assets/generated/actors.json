@@ -1,0 +1,90 @@
+{
+  "actors": {
+    "ayan": {
+      "kind": "character",
+      "provider": "fallback",
+      "texture": "res://assets/generated/characters/ayan.png"
+    },
+    "boss_01": {
+      "kind": "enemy",
+      "provider": "fallback",
+      "texture": "res://assets/generated/enemies/boss_01.png"
+    },
+    "boss_02": {
+      "kind": "enemy",
+      "provider": "fallback",
+      "texture": "res://assets/generated/enemies/boss_02.png"
+    },
+    "boss_03": {
+      "kind": "enemy",
+      "provider": "fallback",
+      "texture": "res://assets/generated/enemies/boss_03.png"
+    },
+    "boss_04": {
+      "kind": "enemy",
+      "provider": "fallback",
+      "texture": "res://assets/generated/enemies/boss_04.png"
+    },
+    "boss_05": {
+      "kind": "enemy",
+      "provider": "fallback",
+      "texture": "res://assets/generated/enemies/boss_05.png"
+    },
+    "boss_06": {
+      "kind": "enemy",
+      "provider": "fallback",
+      "texture": "res://assets/generated/enemies/boss_06.png"
+    },
+    "qiaosheng": {
+      "kind": "character",
+      "provider": "fallback",
+      "texture": "res://assets/generated/characters/qiaosheng.png"
+    },
+    "rift_walker": {
+      "kind": "enemy",
+      "provider": "fallback",
+      "texture": "res://assets/generated/enemies/rift_walker.png"
+    },
+    "shenjin": {
+      "kind": "character",
+      "provider": "fallback",
+      "texture": "res://assets/generated/characters/shenjin.png"
+    },
+    "you": {
+      "kind": "character",
+      "provider": "fallback",
+      "texture": "res://assets/generated/characters/you.png"
+    }
+  },
+  "animations": {
+    "attack": {
+      "fps": 12.0,
+      "loop": false,
+      "row": 2
+    },
+    "hurt": {
+      "fps": 10.0,
+      "loop": false,
+      "row": 3
+    },
+    "idle": {
+      "fps": 5.0,
+      "loop": true,
+      "row": 0
+    },
+    "walk": {
+      "fps": 8.0,
+      "loop": true,
+      "row": 1
+    }
+  },
+  "frame_size": [
+    192,
+    288
+  ],
+  "grid": [
+    4,
+    4
+  ],
+  "schema_version": 1
+}
