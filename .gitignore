@@ -1,3 +1,8 @@
 .godot/
 *.log
-
+builds/
+art_pipeline/inbox/*
+!art_pipeline/inbox/.gitkeep
+__pycache__/
+*.pyc
+integration_preview.png.import

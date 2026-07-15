@@ -1,0 +1,35 @@
+# 构建与交付
+
+## 开发环境
+
+- Godot 4.7 stable（Standard，非 .NET）
+- Python 3
+- Pillow（用于从原始透明立绘生成开发用动作表）
+- macOS 构建机可同时输出 macOS Universal 和 Windows x86_64
+
+## 一键构建
+
+在 macOS 双击 `生成发布包.command`。脚本会：
+
+1. 更新 11 名角色的 4×4 动作表。
+2. 验证动作表尺寸、透明通道和角色清单。
+3. 按需安装 macOS、Windows x64 与中文 ICU 数据，不下载无关平台模板。
+4. 让 Godot 完成素材导入并运行六章烟雾测试。
+5. 输出两个发布成品到 `builds/`。
+
+## 发布成品
+
+- macOS：`builds/macos/山河共生-macOS.zip`，Universal 架构，兼容 Apple Silicon 与 Intel。
+- Windows：`builds/windows/山河共生-Windows.exe`，x86_64，PCK 已嵌入单文件。
+
+macOS 包使用开发测试用的 ad-hoc 签名，没有 Apple Developer ID 公证。自己试玩可直接解压运行；如果系统提示来自未知开发者，可在 Finder 中右键应用并选择“打开”。正式公开发布时，应改用 Developer ID 签名并完成 Apple notarization。
+
+## 工程分层
+
+- `scripts/game_content.gd`：六章剧情、NPC、见闻、选择与能力数据。
+- `scripts/exploration.gd`：探索、战斗和动作状态切换。
+- `scripts/sprite_sheet_library.gd`：动作表运行时读取与逐帧选择。
+- `art_pipeline/manifest.json`：FrameRonin 输入输出契约。
+- `tools/build_motion_sheets.py`：外部成品接入及开发兜底生成器。
+- `assets/generated/`：Godot 实际使用的标准化动作素材。
+- `tests/smoke_test.gd`：六章、战斗、选择、结局与动作表整合测试。

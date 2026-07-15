@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "frame_size": [192, 288],
+  "grid": [4, 4],
+  "animations": {
+    "idle": {"row": 0, "fps": 5.0, "loop": true},
+    "walk": {"row": 1, "fps": 8.0, "loop": true},
+    "attack": {"row": 2, "fps": 12.0, "loop": false},
+    "hurt": {"row": 3, "fps": 10.0, "loop": false}
+  },
+  "actors": [
+    {"id": "you", "kind": "character", "source": "assets/characters/you_sprite.png", "inbox": "art_pipeline/inbox/you.png", "output": "assets/generated/characters/you.png"},
+    {"id": "ayan", "kind": "character", "source": "assets/characters/ayan_sprite.png", "inbox": "art_pipeline/inbox/ayan.png", "output": "assets/generated/characters/ayan.png"},
+    {"id": "shenjin", "kind": "character", "source": "assets/characters/shenjin_sprite.png", "inbox": "art_pipeline/inbox/shenjin.png", "output": "assets/generated/characters/shenjin.png"},
+    {"id": "qiaosheng", "kind": "character", "source": "assets/characters/qiaosheng_sprite.png", "inbox": "art_pipeline/inbox/qiaosheng.png", "output": "assets/generated/characters/qiaosheng.png"},
+    {"id": "rift_walker", "kind": "enemy", "source": "assets/enemies/rift_walker.png", "inbox": "art_pipeline/inbox/rift_walker.png", "output": "assets/generated/enemies/rift_walker.png"},
+    {"id": "boss_01", "kind": "enemy", "source": "assets/enemies/boss_01.png", "inbox": "art_pipeline/inbox/boss_01.png", "output": "assets/generated/enemies/boss_01.png"},
+    {"id": "boss_02", "kind": "enemy", "source": "assets/enemies/boss_02.png", "inbox": "art_pipeline/inbox/boss_02.png", "output": "assets/generated/enemies/boss_02.png"},
+    {"id": "boss_03", "kind": "enemy", "source": "assets/enemies/boss_03.png", "inbox": "art_pipeline/inbox/boss_03.png", "output": "assets/generated/enemies/boss_03.png"},
+    {"id": "boss_04", "kind": "enemy", "source": "assets/enemies/boss_04.png", "inbox": "art_pipeline/inbox/boss_04.png", "output": "assets/generated/enemies/boss_04.png"},
+    {"id": "boss_05", "kind": "enemy", "source": "assets/enemies/boss_05.png", "inbox": "art_pipeline/inbox/boss_05.png", "output": "assets/generated/enemies/boss_05.png"},
+    {"id": "boss_06", "kind": "enemy", "source": "assets/enemies/boss_06.png", "inbox": "art_pipeline/inbox/boss_06.png", "output": "assets/generated/enemies/boss_06.png"}
+  ]
+}

@@ -1,6 +1,6 @@
 # 《画境装配局：山河共生》
 
-把《万物装配局》的能力构筑与《画境山河》的多章节古画叙事融合成一款人文探索战斗冒险。
+把《万物装配局》的能力构筑与《画境山河》的多章节古画叙事融合成一款人文探索战斗冒险。本分支加入 FrameRonin 离线美术接口、11 名角色动作表、可重建素材管线与 macOS / Windows 发布流程。
 
 ![标题画面](preview_title.png)
 
@@ -10,9 +10,18 @@
 
 ![终章首领战](preview_boss.png)
 
+![FrameRonin 动作表整合实机](integration_preview.png)
+
 ## 直接游玩
 
 macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.godot` 后运行。
+
+需要制作角色动作时，双击 `打开FrameRonin.command`；本机已部署的 FrameRonin 会在 `http://127.0.0.1:4173/` 打开。
+
+已经导出的成品位于：
+
+- `builds/macos/山河共生-macOS.zip`
+- `builds/windows/山河共生-Windows.exe`
 
 ## 一卷的完整循环
 
@@ -38,10 +47,16 @@ macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.god
 
 - 探索 HUD 改为窄顶栏与轻量任务条；剧情、NPC、见闻和选择不再使用满屏大面板。
 - 长段中文使用段落排版组件，按中文标点自然换行。
-- 守卷人使用透明全身角色美术，并拥有走步起伏、蓄势、突进、挥砍、闪避残影与受击反馈。
+- 守卷人使用 4×4 动作表，并拥有待机、行走、突进、挥砍、闪避残影与受击反馈。
 - 阿砚、沈烬、乔生、墨魇与守卷人具有一致的剧情立绘与场景人物形象，不再使用几何占位。
-- 普通裂墨与六章首领均为独立精绘形象；碑甲墨兽、钟魇、纸傀、青兽、司书和初代守卷人各有明确的材料与文化母题。
+- 普通裂墨与六章首领均拥有独立动作表；碑甲墨兽、钟魇、纸傀、青兽、司书和初代守卷人各有明确的材料与文化母题。
 - 视觉方向采用原创的古典武侠电影意境：空镜、竹影、雨雾、戏曲式停顿与克制色彩。
+
+## FrameRonin 工作方式
+
+FrameRonin 是外部美术生产工具，不嵌入游戏，也不复制它的网页源码。项目约定每名角色输出一张 4 列 × 4 行透明 PNG：四行依次为 `idle`、`walk`、`attack`、`hurt`。
+
+把成品放入 `art_pipeline/inbox/`，文件名使用 `you.png`、`ayan.png`、`boss_01.png` 等角色 ID，再双击 `更新动作素材.command`。没有 FrameRonin 成品时，工具会从原始透明立绘生成开发用基础动作，保证工程始终能运行和发布。详细规则见 `art_pipeline/README.md`。
 
 ## 内容规模
 
@@ -64,11 +79,18 @@ macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.god
 ## 自动测试
 
 ```bash
+python3 tools/test_motion_pipeline.py
+/Applications/Godot.app/Contents/MacOS/Godot --headless --path . --import
 /Applications/Godot.app/Contents/MacOS/Godot --headless --path . --script res://tests/smoke_test.gd
 ```
 
 通过时输出：
 
 ```text
-SMOKE_TEST_PASS chapters=6 combat=ok bosses=6 lore=12 choices=18 endings=3
+PIPELINE_TEST_PASS actors=11 animations=4 grid=4x4
+SMOKE_TEST_PASS chapters=6 combat=ok bosses=6 lore=12 choices=18 endings=3 actors=11
 ```
+
+## 重新生成发布包
+
+macOS 双击 `生成发布包.command`。它会依次重建动作素材、安装缺失的 Godot 4.7 官方平台模板、运行测试，并生成 macOS Universal 与 Windows x86_64 成品。发布细节见 `BUILDING.md`。
