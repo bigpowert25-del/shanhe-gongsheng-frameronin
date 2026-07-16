@@ -26,6 +26,15 @@ func _run() -> void:
 		var frame: Dictionary = sheets.frame_for(actor_id, "attack", 0.18)
 		assert(not frame.is_empty() and frame.texture != null, "动作帧应可加载：%s" % actor_id)
 		assert(frame.region.size == Vector2(192, 288), "动作帧尺寸应符合 FrameRonin 接口")
+	var joystick_script = load("res://scripts/mobile_joystick.gd")
+	var joystick = joystick_script.new()
+	joystick.size = Vector2(210, 210)
+	root.add_child(joystick)
+	joystick._update_direction(Vector2(190, 105))
+	assert(joystick.direction.x > 0.8, "移动摇杆应输出标准化方向")
+	joystick._reset_direction()
+	assert(joystick.direction == Vector2.ZERO, "松开摇杆后移动方向应归零")
+	joystick.queue_free()
 
 	var exploration_script = load("res://scripts/exploration.gd")
 	var arena = exploration_script.new()
@@ -34,6 +43,11 @@ func _run() -> void:
 	var test_traits: Array[String] = ["tiger", "wolf"]
 	arena.start_chapter(game.chapters[0], test_traits, game.legacy_stats, 0)
 	await process_frame
+	var mobile_move_start: Vector2 = arena.player_pos
+	arena.set_virtual_move(Vector2.RIGHT)
+	arena._update_movement(0.20)
+	assert(arena.player_pos.x > mobile_move_start.x, "移动摇杆应驱动角色行走")
+	arena.set_virtual_move(Vector2.ZERO)
 	var enemy: Dictionary = arena.enemies[0]
 	enemy.pos = arena.player_pos + Vector2(45, 0)
 	arena.enemies[0] = enemy

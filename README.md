@@ -1,6 +1,6 @@
 # 《画境装配局：山河共生》
 
-把《万物装配局》的能力构筑与《画境山河》的多章节古画叙事融合成一款人文探索战斗冒险。本分支加入 FrameRonin 离线美术接口、11 名角色动作表、可重建素材管线与 macOS / Windows 发布流程。
+把《万物装配局》的能力构筑与《画境山河》的多章节古画叙事融合成一款人文探索战斗冒险。本分支加入 FrameRonin 离线美术接口、11 名角色动作表、可重建素材管线，以及桌面端和手机网页端发布流程。
 
 ![标题画面](preview_title.png)
 
@@ -12,9 +12,13 @@
 
 ![FrameRonin 动作表整合实机](integration_preview.png)
 
+![手机横屏探索与战斗](mobile_preview.png)
+
 ## 直接游玩
 
 macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.godot` 后运行。
+
+手机和电脑浏览器可直接打开[在线试玩版](https://bigpowert25-del.github.io/shanhe-gongsheng-frameronin/)。手机建议横屏，并允许浏览器全屏显示。
 
 需要制作角色动作时，双击 `打开FrameRonin.command`；本机已部署的 FrameRonin 会在 `http://127.0.0.1:4173/` 打开。
 
@@ -22,6 +26,7 @@ macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.god
 
 - `builds/macos/山河共生-macOS.zip`
 - `builds/windows/山河共生-Windows.exe`
+- `builds/web/index.html`
 
 ## 一卷的完整循环
 
@@ -42,6 +47,8 @@ macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.god
 - `Tab`：隐藏 / 显示 HUD，让古画场景完整露出
 
 画面右下角也提供了可点击操作按钮。
+
+手机网页端使用左侧虚拟摇杆移动；右侧依次提供墨刃、闪避、共鸣和交互。触控区域按横屏安全区重新排布，不遮挡主角、NPC和主要任务目标。
 
 ## 电影式视觉与动作
 
@@ -93,4 +100,4 @@ SMOKE_TEST_PASS chapters=6 combat=ok bosses=6 lore=12 choices=18 endings=3 actor
 
 ## 重新生成发布包
 
-macOS 双击 `生成发布包.command`。它会依次重建动作素材、安装缺失的 Godot 4.7 官方平台模板、运行测试，并生成 macOS Universal 与 Windows x86_64 成品。发布细节见 `BUILDING.md`。
+macOS 双击 `生成发布包.command`。它会依次重建动作素材、安装缺失的 Godot 4.7 官方平台模板、运行测试，并生成 macOS Universal、Windows x86_64 和 Web/PWA 三种成品。只需要网页试玩版时，双击 `生成网页试玩版.command`。发布细节见 `BUILDING.md`。

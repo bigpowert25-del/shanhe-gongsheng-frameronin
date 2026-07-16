@@ -2,7 +2,7 @@
 """Install only the Godot 4.7 release templates needed by this project.
 
 Godot 4.7's official archive supports HTTP ranges. This mirrors the editor's
-individual-template downloader so macOS/Windows builds do not require fetching
+individual-template downloader so macOS/Windows/Web builds do not require fetching
 the entire 1.2 GB template package.
 """
 
@@ -27,6 +27,8 @@ FILES = [
     "macos.zip",
     "windows_release_x86_64.exe",
     "windows_release_x86_64_console.exe",
+    "web_nothreads_debug.zip",
+    "web_nothreads_release.zip",
     "icudt_godot.dat",
 ]
 
