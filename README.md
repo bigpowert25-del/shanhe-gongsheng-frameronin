@@ -18,7 +18,7 @@
 
 macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.godot` 后运行。
 
-手机和电脑浏览器可直接打开[阿里云正式试玩版](https://www.bigpower.ccwu.cc/shanhe/)，也可使用 [GitHub Pages 备用地址](https://bigpowert25-del.github.io/shanhe-gongsheng-frameronin/)。手机建议横屏，并允许浏览器全屏显示。
+手机和电脑浏览器可直接打开 [GitHub Pages 试玩版](https://bigpowert25-del.github.io/shanhe-gongsheng-frameronin/)，也可使用[阿里云独立域名](https://www.bigpower.ccwu.cc/shanhe/)。阿里云当前位于美国弗吉尼亚，国内首次加载可能较慢。手机建议横屏，并允许浏览器全屏显示。
 
 需要制作角色动作时，双击 `打开FrameRonin.command`；本机已部署的 FrameRonin 会在 `http://127.0.0.1:4173/` 打开。
 
