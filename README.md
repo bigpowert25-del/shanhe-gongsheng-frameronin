@@ -18,7 +18,9 @@
 
 macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.godot` 后运行。
 
-手机和电脑浏览器可直接打开 [GitHub Pages 试玩版](https://bigpowert25-del.github.io/shanhe-gongsheng-frameronin/)，也可使用[阿里云独立域名](https://www.bigpower.ccwu.cc/shanhe/)。阿里云当前位于美国弗吉尼亚，国内首次加载可能较慢。手机建议横屏，并允许浏览器全屏显示。
+手机无需安装，直接打开[阿里云极速网页版](https://www.bigpower.ccwu.cc/shanhe/)。它不加载 Godot/WASM，首次打开约 140 KB，进入章节后再按需加载该卷约 0.7 MB 的场景与人物资源。手机建议横屏，并允许浏览器全屏显示。
+
+电脑可打开[完整 Godot 画质版](https://www.bigpower.ccwu.cc/shanhe-godot/)，也可使用 [GitHub Pages 备用入口](https://bigpowert25-del.github.io/shanhe-gongsheng-frameronin/)。阿里云当前位于美国弗吉尼亚，极速版能显著降低启动等待，但服务器跨境线路本身仍可能有波动。
 
 需要制作角色动作时，双击 `打开FrameRonin.command`；本机已部署的 FrameRonin 会在 `http://127.0.0.1:4173/` 打开。
 
@@ -27,6 +29,7 @@ macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.god
 - `builds/macos/山河共生-macOS.zip`
 - `builds/windows/山河共生-Windows.exe`
 - `builds/web/index.html`
+- `web_lite/index.html`（手机极速网页版）
 
 ## 一卷的完整循环
 
@@ -100,4 +103,4 @@ SMOKE_TEST_PASS chapters=6 combat=ok bosses=6 lore=12 choices=18 endings=3 actor
 
 ## 重新生成发布包
 
-macOS 双击 `生成发布包.command`。它会依次重建动作素材、安装缺失的 Godot 4.7 官方平台模板、运行测试，并生成 macOS Universal、Windows x86_64 和 Web/PWA 三种成品。只需要网页试玩版时，双击 `生成网页试玩版.command`。发布细节见 `BUILDING.md`。
+macOS 双击 `生成发布包.command`。它会依次重建动作素材、安装缺失的 Godot 4.7 官方平台模板、运行测试，并生成 macOS Universal、Windows x86_64 和 Web/PWA 三种成品。只需要电脑完整网页版时，双击 `生成网页试玩版.command`；只需要手机极速网页版时，双击 `生成极速网页版.command`。发布细节见 `BUILDING.md`。

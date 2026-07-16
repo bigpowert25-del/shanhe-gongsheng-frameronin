@@ -22,8 +22,11 @@
 - macOS：`builds/macos/山河共生-macOS.zip`，Universal 架构，兼容 Apple Silicon 与 Intel。
 - Windows：`builds/windows/山河共生-Windows.exe`，x86_64，PCK 已嵌入单文件。
 - Web/PWA：`builds/web/index.html`，适配手机横屏与桌面浏览器，可部署到 GitHub Pages 等静态网站服务。
+- 手机极速版：`web_lite/index.html`，纯 HTML/CSS/Canvas，不依赖 Godot/WASM；首屏和六章资源分开加载。
 
 只构建网页试玩版时，双击 `生成网页试玩版.command`。脚本会安装缺失模板、导入素材、运行烟雾测试，然后生成完整的离线 PWA 文件。由于浏览器安全限制，请通过本地网页服务器或静态网站访问，不要直接双击 `index.html`。
+
+只构建手机极速版时，双击 `生成极速网页版.command`。脚本会从 `scripts/game_content.gd` 导出六章数据，并把原始场景、人物和怪物压成手机尺寸 WebP。输出目录可直接部署到任意静态网站；当前线上约定为 `/shanhe/`，完整 Godot 版保留在 `/shanhe-godot/`。
 
 macOS 包使用开发测试用的 ad-hoc 签名，没有 Apple Developer ID 公证。自己试玩可直接解压运行；如果系统提示来自未知开发者，可在 Finder 中右键应用并选择“打开”。正式公开发布时，应改用 Developer ID 签名并完成 Apple notarization。
 
@@ -35,5 +38,8 @@ macOS 包使用开发测试用的 ad-hoc 签名，没有 Apple Developer ID 公�
 - `scripts/sprite_sheet_library.gd`：动作表运行时读取与逐帧选择。
 - `art_pipeline/manifest.json`：FrameRonin 输入输出契约。
 - `tools/build_motion_sheets.py`：外部成品接入及开发兜底生成器。
+- `tools/export_web_lite_content.gd`：把 Godot 六章内容导出为极速网页版数据。
+- `tools/build_web_lite_assets.py`：生成逐章加载的手机尺寸 WebP 素材。
 - `assets/generated/`：Godot 实际使用的标准化动作素材。
+- `web_lite/`：无需 WASM 的六章探索、任务、剧情与战斗客户端。
 - `tests/smoke_test.gd`：六章、战斗、选择、结局与动作表整合测试。
