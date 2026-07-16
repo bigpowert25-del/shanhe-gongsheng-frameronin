@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxt3atf0wb1ly"
-path="res://.godot/imported/chapter_02.jpg-3394d4d426a9f09bf22dab951b729daf.ctex"
+uid="uid://dvwsjigljmuqi"
+path="res://.godot/imported/mobile_preview.png-b83dfc0f4a5af63834df9848cb551732.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/backgrounds/chapter_02.jpg"
-dest_files=["res://.godot/imported/chapter_02.jpg-3394d4d426a9f09bf22dab951b729daf.ctex"]
+source_file="res://mobile_preview.png"
+dest_files=["res://.godot/imported/mobile_preview.png-b83dfc0f4a5af63834df9848cb551732.ctex"]
 
 [params]
 
-compress/mode=1
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -36,5 +36,5 @@ process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
-process/size_limit=2048
+process/size_limit=0
 detect_3d/compress_to=1

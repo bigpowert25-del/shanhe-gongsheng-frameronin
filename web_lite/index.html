@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#151914">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="《画境装配局：山河共生》无需安装的轻量手机网页版">
+  <title>画境装配局：山河共生</title>
+  <link rel="preload" href="assets/backgrounds/cover.webp" as="image" type="image/webp">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="game" aria-label="画境装配局：山河共生">
+    <h1 class="sr-only">画境装配局：山河共生</h1>
+    <canvas id="stage" width="1280" height="720"></canvas>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header id="hud" class="hidden">
+      <div class="chapter-mark">
+        <small id="chapter-kicker">第一卷</small>
+        <strong id="chapter-name">风尘入画</strong>
+      </div>
+      <div class="meter-group">
+        <label>生命 <span id="health-number">100</span></label>
+        <div class="meter"><i id="health-bar"></i></div>
+        <label>共鸣 <span id="energy-number">100</span></label>
+        <div class="meter energy"><i id="energy-bar"></i></div>
+      </div>
+      <button id="hud-toggle" class="quiet-button" type="button">界面</button>
+    </header>
+
+    <aside id="missions" class="hidden" aria-live="polite"></aside>
+    <div id="toast" aria-live="polite"></div>
+
+    <section id="panel" aria-live="polite"></section>
+
+    <section id="loading" class="hidden" aria-live="assertive">
+      <div class="loading-seal"></div>
+      <strong id="loading-title">正在展开画卷</strong>
+      <div class="loading-track"><i id="loading-bar"></i></div>
+      <small id="loading-detail">准备轻量资源…</small>
+    </section>
+
+    <section id="touch-controls" class="hidden" aria-label="触摸操作">
+      <div class="joystick-wrap">
+        <span>移动</span>
+        <div id="joystick" class="joystick">
+          <i id="joystick-knob"></i>
+        </div>
+      </div>
+      <div class="action-cluster">
+        <button id="burst-button" class="action burst" type="button">共鸣</button>
+        <button id="interact-button" class="action interact" type="button">交互</button>
+        <button id="dash-button" class="action dash" type="button">闪避</button>
+        <button id="attack-button" class="action attack" type="button">墨刃</button>
+      </div>
+    </section>
+
+    <section id="rotate-hint">
+      <div>请横屏展开山河卷</div>
+      <small>旋转手机后即可开始</small>
+    </section>
+  </main>
+  <noscript>需要开启 JavaScript 才能进入画境。</noscript>
+  <script src="game.js" defer></script>
+</body>
+</html>

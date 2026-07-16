@@ -15,4 +15,6 @@
 | 第六卷 | *Landscapes and Flowers* | Wang Shishen | 1745 | <https://www.metmuseum.org/art/collection/search/49240> |
 | 终章 | *Joint Landscape* | Shen Zhou | 约 1509 与 1546 | <https://www.metmuseum.org/art/collection/search/39556> |
 
-游戏标题、文本、交互设计、人物与怪物设定、动作系统、动态效果与界面编排为本项目原创实现。人物立绘、透明场景角色、普通裂墨与六章首领图像由 Codex 内置图像生成能力按本项目原创设定制作，并经过透明边缘处理后接入 Godot；未临摹具体演员或既有影视角色。字体使用 macOS 系统字体，并提供通用中文字体回退。
+游戏标题、文本、交互设计、人物与怪物设定、动作系统、动态效果与界面编排为本项目原创实现。人物立绘、透明场景角色、普通裂墨与六章首领图像由 Codex 内置图像生成能力按本项目原创设定制作，并经过透明边缘处理后接入 Godot；未临摹具体演员或既有影视角色。
+
+网页与移动版本内嵌 Noto Sans SC 与 Noto Serif SC 可变字体，来源为 Google Fonts，采用 SIL Open Font License 1.1；许可证原文保存在 `assets/fonts/`。

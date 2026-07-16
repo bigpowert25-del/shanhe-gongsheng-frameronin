@@ -71,6 +71,9 @@ var particles: Array[Dictionary] = []
 var lore_points: Array[Dictionary] = []
 var rng := RandomNumberGenerator.new()
 var sprite_sheets = SpriteSheetLibrary.new()
+var virtual_move := Vector2.ZERO
+var virtual_interact_held := false
+var mobile_layout := false
 
 
 func _ready() -> void:
@@ -81,7 +84,7 @@ func _ready() -> void:
 
 
 func start_chapter(data: Dictionary, traits: Array[String], stats: Dictionary, index: int) -> void:
-	chapter = data
+	chapter = data.duplicate(true)
 	chapter_index = index
 	trait_ids = traits.duplicate()
 	legacy_stats = stats.duplicate(true)
@@ -89,8 +92,12 @@ func start_chapter(data: Dictionary, traits: Array[String], stats: Dictionary, i
 	health = max_health
 	energy = max_energy
 	time_left = 88.0 + float(stats.get("fate", 45)) * 0.16
-	player_pos = Vector2(150, 570)
+	player_pos = Vector2(300, 570) if mobile_layout else Vector2(150, 570)
 	aim_pos = player_pos + Vector2.RIGHT * 180.0
+	if mobile_layout:
+		var npc_position: Vector2 = chapter.npc.pos
+		if npc_position.x > 900.0 and npc_position.y > 440.0:
+			chapter.npc.pos = Vector2(930, 440)
 	_build_world()
 	set_process(true)
 	grab_focus()
@@ -166,7 +173,7 @@ func _build_world() -> void:
 		{"pos": Vector2(872, 506), "radius": 60.0 + chapter_index * 4.0}
 	]
 	enemies.clear()
-	var enemy_positions := [Vector2(360, 250), Vector2(700, 430), Vector2(1010, 360), Vector2(1130, 600)]
+	var enemy_positions := [Vector2(360, 250), Vector2(700, 430), Vector2(1010, 360), Vector2(930, 600) if mobile_layout else Vector2(1130, 600)]
 	for i in enemy_positions.size():
 		_add_enemy(enemy_positions[i], false, i)
 	trail.clear()
@@ -226,11 +233,12 @@ func _handle_actions() -> void:
 
 
 func _update_movement(delta: float) -> void:
-	var direction := Vector2.ZERO
+	var direction := virtual_move
 	if Input.is_key_pressed(KEY_A) or Input.is_key_pressed(KEY_LEFT): direction.x -= 1.0
 	if Input.is_key_pressed(KEY_D) or Input.is_key_pressed(KEY_RIGHT): direction.x += 1.0
 	if Input.is_key_pressed(KEY_W) or Input.is_key_pressed(KEY_UP): direction.y -= 1.0
 	if Input.is_key_pressed(KEY_S) or Input.is_key_pressed(KEY_DOWN): direction.y += 1.0
+	if direction.length() > 1.0: direction = direction.normalized()
 	if direction.length_squared() > 0.0:
 		move_dir = direction.normalized()
 		step_phase += delta * (12.0 if dash_time <= 0.0 else 24.0)
@@ -266,7 +274,7 @@ func _update_nodes(delta: float) -> void:
 	for node in nodes:
 		if bool(node.done):
 			continue
-		if player_pos.distance_to(node.pos) < 48.0 and Input.is_key_pressed(KEY_E):
+		if player_pos.distance_to(node.pos) < 48.0 and (Input.is_key_pressed(KEY_E) or virtual_interact_held):
 			node.progress = minf(1.0, float(node.progress) + delta * 0.66 * float(effects.repair))
 			if float(node.progress) >= 1.0:
 				node.done = true
@@ -326,6 +334,25 @@ func basic_attack() -> void:
 		energy = minf(max_energy, energy + 3.0)
 	else:
 		_spawn_particles(player_pos + direction * 58.0, Color(chapter.accent, 0.5), 4)
+
+
+func mobile_attack() -> void:
+	aim_pos = player_pos + move_dir * 180.0
+	basic_attack()
+
+
+func set_virtual_move(direction: Vector2) -> void:
+	virtual_move = direction.limit_length(1.0)
+
+
+func set_mobile_mode(enabled: bool) -> void:
+	mobile_layout = enabled
+
+
+func set_virtual_interact(pressed: bool) -> void:
+	virtual_interact_held = pressed
+	if pressed:
+		interact_action()
 
 
 func dash() -> void:
@@ -455,6 +482,8 @@ func _fail(reason: String) -> void:
 
 func pause_game(value: bool) -> void:
 	paused_game = value
+	if value:
+		virtual_interact_held = false
 
 
 func _emit_hud() -> void:

@@ -14,12 +14,14 @@ python3 tools/test_motion_pipeline.py
 python3 tools/install_export_templates.py
 "$GODOT" --headless --path . --import
 "$GODOT" --headless --path . --script res://tests/smoke_test.gd
-mkdir -p builds/macos builds/windows
+mkdir -p builds/macos builds/windows builds/web
 "$GODOT" --headless --path . --export-release "macOS" "builds/macos/山河共生-macOS.zip"
 "$GODOT" --headless --path . --export-release "Windows x86_64" "builds/windows/山河共生-Windows.exe"
+"$GODOT" --headless --path . --export-release "Web Mobile" "builds/web/index.html"
 
 echo
 echo "发布包已生成："
 echo "  builds/macos/山河共生-macOS.zip"
 echo "  builds/windows/山河共生-Windows.exe"
+echo "  builds/web/index.html"
 read -k 1 "?按任意键关闭…"

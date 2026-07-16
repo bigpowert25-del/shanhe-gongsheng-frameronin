@@ -6,9 +6,10 @@ const PortraitScript := preload("res://scripts/portrait.gd")
 const AtmosphereScript := preload("res://scripts/atmosphere.gd")
 const InkTransitionScript := preload("res://scripts/ink_transition.gd")
 const GameContent := preload("res://scripts/game_content.gd")
+const MobileJoystickScript := preload("res://scripts/mobile_joystick.gd")
 
-var serif_font: SystemFont
-var sans_font: SystemFont
+var serif_font: Font
+var sans_font: Font
 var holder: Control
 var transition: Control
 var transition_busy := false
@@ -28,17 +29,18 @@ var trait_buttons: Dictionary = {}
 var lab_start_button: Button
 var last_report: Dictionary = {}
 var save_enabled := true
+var mobile_mode := false
 
 var traits: Array = GameContent.traits()
 var chapters: Array = GameContent.chapters()
 
 
 func _ready() -> void:
-	serif_font = SystemFont.new()
-	serif_font.font_names = PackedStringArray(["STKaiti", "Kaiti SC", "Songti SC", "Noto Serif CJK SC"])
-	sans_font = SystemFont.new()
-	sans_font.font_names = PackedStringArray(["PingFang SC", "Helvetica Neue", "Noto Sans CJK SC"])
-	save_enabled = not "--no-save" in OS.get_cmdline_user_args()
+	var args := OS.get_cmdline_user_args()
+	mobile_mode = OS.has_feature("mobile") or OS.has_feature("web") or "--mobile-ui" in args
+	serif_font = load("res://assets/fonts/NotoSerifSC-Variable.ttf")
+	sans_font = load("res://assets/fonts/NotoSansSC-Variable.ttf")
+	save_enabled = not "--no-save" in args
 	holder = Control.new()
 	holder.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(holder)
@@ -126,7 +128,8 @@ func _build_title() -> void:
 		resume.size = Vector2(210, 58)
 		resume.pressed.connect(_continue_game)
 		holder.add_child(resume)
-	var keys := _label("WASD 移动  ·  左键/空格攻击  ·  Shift 闪避  ·  Q 共鸣  ·  E 交互", 13, Color("aaa89f"), sans_font)
+	var controls_hint := "左侧摇杆移动  ·  右侧触控：墨刃 / 闪避 / 共鸣 / 交互  ·  建议横屏" if mobile_mode else "WASD 移动  ·  左键/空格攻击  ·  Shift 闪避  ·  Q 共鸣  ·  E 交互"
+	var keys := _label(controls_hint, 13, Color("aaa89f"), sans_font)
 	keys.position = Vector2(68, 636)
 	keys.size = Vector2(720, 24)
 	holder.add_child(keys)
@@ -394,6 +397,7 @@ func _build_exploration() -> void:
 	stage.chapter_completed.connect(_chapter_complete)
 	stage.chapter_failed.connect(_chapter_failed)
 	stage.shake_requested.connect(_shake)
+	stage.set_mobile_mode(mobile_mode)
 	hud_visible = true
 	hud_layer = Control.new()
 	hud_layer.name = "HudLayer"
@@ -445,36 +449,85 @@ func _build_exploration() -> void:
 		qb.add_child(ql)
 		quest_labels[item[0]] = ql
 
-	toast_label = _label("靠近人物或阵眼按 E 交互", 12, Color("f0e7d6"), sans_font)
-	toast_label.position = Vector2(28, 666)
+	toast_label = _label("靠近人物或阵眼使用交互", 12, Color("f0e7d6"), sans_font)
+	toast_label.position = Vector2(270, 666) if mobile_mode else Vector2(28, 666)
 	toast_label.size = Vector2(430, 30)
 	toast_label.add_theme_stylebox_override("normal", _style(Color(0.01, 0.025, 0.025, 0.62), Color(1, 1, 1, 0.08), 1, 5, 10))
 	hud_layer.add_child(toast_label)
 
-	var actions := HBoxContainer.new()
-	actions.position = Vector2(778, 654)
-	actions.size = Vector2(468, 44)
-	actions.add_theme_constant_override("separation", 6)
-	hud_layer.add_child(actions)
-	var attack := _action_button("墨刃", "空格", data.accent)
-	attack.pressed.connect(func(): if stage: stage.basic_attack())
-	actions.add_child(attack)
-	var dash_button := _action_button("闪避", "Shift", Color("8eb8c2"))
-	dash_button.pressed.connect(func(): if stage: stage.dash())
-	actions.add_child(dash_button)
-	var burst_button := _action_button("共鸣", "Q", Color("d8b65f"))
-	burst_button.pressed.connect(func(): if stage: stage.burst())
-	actions.add_child(burst_button)
-	var interact := _action_button("交互", "E", Color("91c7b3"))
-	interact.pressed.connect(func(): if stage: stage.interact_action())
-	actions.add_child(interact)
-	var toggle := _button("界面  Tab", false, data.accent)
+	if mobile_mode:
+		_add_mobile_controls(data)
+	else:
+		var actions := HBoxContainer.new()
+		actions.position = Vector2(778, 654)
+		actions.size = Vector2(468, 44)
+		actions.add_theme_constant_override("separation", 6)
+		hud_layer.add_child(actions)
+		var attack := _action_button("墨刃", "空格", data.accent)
+		attack.pressed.connect(func(): if stage: stage.basic_attack())
+		actions.add_child(attack)
+		var dash_button := _action_button("闪避", "Shift", Color("8eb8c2"))
+		dash_button.pressed.connect(func(): if stage: stage.dash())
+		actions.add_child(dash_button)
+		var burst_button := _action_button("共鸣", "Q", Color("d8b65f"))
+		burst_button.pressed.connect(func(): if stage: stage.burst())
+		actions.add_child(burst_button)
+		var interact := _action_button("交互", "E", Color("91c7b3"))
+		interact.pressed.connect(func(): if stage: stage.interact_action())
+		actions.add_child(interact)
+	var toggle := _button("界面" if mobile_mode else "界面  Tab", false, data.accent)
 	toggle.position = Vector2(1138, 18)
 	toggle.size = Vector2(106, 38)
 	toggle.add_theme_font_size_override("font_size", 12)
 	toggle.pressed.connect(_toggle_hud)
 	holder.add_child(toggle)
 	stage.start_chapter.call_deferred(data, selected_traits, legacy_stats, chapter_index)
+
+
+func _add_mobile_controls(data: Dictionary) -> void:
+	var joystick := MobileJoystickScript.new()
+	joystick.name = "MobileJoystick"
+	joystick.position = Vector2(30, 486)
+	joystick.size = Vector2(210, 210)
+	joystick.z_index = 20
+	joystick.direction_changed.connect(func(direction: Vector2): if stage: stage.set_virtual_move(direction))
+	hud_layer.add_child(joystick)
+
+	var move_label := _label("移动", 11, Color("d7d2c6"), sans_font)
+	move_label.position = Vector2(110, 470)
+	move_label.size = Vector2(60, 20)
+	move_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	move_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud_layer.add_child(move_label)
+
+	var attack := _mobile_action_button("墨刃", data.accent, Vector2(1120, 570), Vector2(112, 112))
+	attack.pressed.connect(func(): if stage: stage.mobile_attack())
+	hud_layer.add_child(attack)
+	var dash_button := _mobile_action_button("闪避", Color("8eb8c2"), Vector2(1008, 606), Vector2(96, 78))
+	dash_button.pressed.connect(func(): if stage: stage.dash())
+	hud_layer.add_child(dash_button)
+	var burst_button := _mobile_action_button("共鸣", Color("d8b65f"), Vector2(1018, 506), Vector2(96, 78))
+	burst_button.pressed.connect(func(): if stage: stage.burst())
+	hud_layer.add_child(burst_button)
+	var interact := _mobile_action_button("交互", Color("91c7b3"), Vector2(1120, 472), Vector2(112, 78))
+	interact.button_down.connect(func(): if stage: stage.set_virtual_interact(true))
+	interact.button_up.connect(func(): if stage: stage.set_virtual_interact(false))
+	hud_layer.add_child(interact)
+
+
+func _mobile_action_button(text_value: String, accent: Color, button_position: Vector2, button_size: Vector2) -> Button:
+	var button := Button.new()
+	button.text = text_value
+	button.position = button_position
+	button.size = button_size
+	button.add_theme_font_override("font", sans_font)
+	button.add_theme_font_size_override("font_size", 17)
+	button.add_theme_color_override("font_color", Color("f2eee4"))
+	button.add_theme_stylebox_override("normal", _style(Color(0.01, 0.03, 0.03, 0.68), Color(accent, 0.58), 2, 34, 8))
+	button.add_theme_stylebox_override("hover", _style(Color(accent, 0.22), Color(accent, 0.88), 2, 34, 8))
+	button.add_theme_stylebox_override("pressed", _style(Color(accent, 0.72), accent.lightened(0.18), 3, 34, 8))
+	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	return button
 
 
 func _add_hud_bar(parent: Container, key: String, title: String, color: Color) -> void:
