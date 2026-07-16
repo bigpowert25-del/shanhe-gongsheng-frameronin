@@ -80,6 +80,10 @@
     return `assets/portraits/${id === "boss_06" ? "moyan" : id}.webp`;
   }
 
+  function fullGameUrl() {
+    return location.hostname.endsWith("github.io") ? "../" : "/shanhe-godot/";
+  }
+
   function imageFromCache(url) {
     return images.get(url) || null;
   }
@@ -190,7 +194,7 @@
         <div class="button-row">
           <button class="primary-button" id="new-game" type="button">新建守卷人</button>
           ${canResume ? '<button class="secondary-button" id="resume-game" type="button">继续上次任务</button>' : ""}
-          <a class="secondary-button" href="/shanhe-godot/" style="display:grid;place-items:center;text-decoration:none">电脑完整画质版</a>
+          <a class="secondary-button" href="${fullGameUrl()}" style="display:grid;place-items:center;text-decoration:none">电脑完整画质版</a>
         </div>
       </article>
     `);

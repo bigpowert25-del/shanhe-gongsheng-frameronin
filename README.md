@@ -18,7 +18,7 @@
 
 macOS 双击 `开始游戏.command`。也可以用 Godot 4.7 打开 `project.godot` 后运行。
 
-手机无需安装，直接打开[阿里云极速网页版](https://www.bigpower.ccwu.cc/shanhe/)。它不加载 Godot/WASM，首次打开约 140 KB，进入章节后再按需加载该卷约 0.7 MB 的场景与人物资源。手机建议横屏，并允许浏览器全屏显示。
+手机无需安装，可直接打开[阿里云极速网页版](https://www.bigpower.ccwu.cc/shanhe/)或 [GitHub Pages 极速版](https://bigpowert25-del.github.io/shanhe-gongsheng-frameronin/mobile/)。它不加载 Godot/WASM，首次打开约 140 KB，进入章节后再按需加载该卷约 0.7 MB 的场景与人物资源。手机建议横屏，并允许浏览器全屏显示。
 
 电脑可打开[完整 Godot 画质版](https://www.bigpower.ccwu.cc/shanhe-godot/)，也可使用 [GitHub Pages 备用入口](https://bigpowert25-del.github.io/shanhe-gongsheng-frameronin/)。阿里云当前位于美国弗吉尼亚，极速版能显著降低启动等待，但服务器跨境线路本身仍可能有波动。
 
